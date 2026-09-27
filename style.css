@@ -1,0 +1,624 @@
+/* =========================================================
+   LOOK CLOSER — style.css
+   A dark Renaissance notebook, rendered as a page.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   1. TOKENS
+   --------------------------------------------------------- */
+:root {
+  /* Palette — deep black, charcoal, brown, parchment, ivory, muted gold */
+  --ink-black:   #070605;
+  --charcoal:    #100e0c;
+  --brown-deep:  #1c1511;
+  --brown:       #2a1f17;
+
+  --parchment:   #cbb894;
+  --ivory:       #ece3d2;
+  --ivory-warm:  #f1e9da;
+
+  --gold:        #b08d57;
+  --gold-dim:    rgba(176, 141, 87, 0.55);
+
+  --text-muted:  rgba(236, 227, 210, 0.62);
+  --text-faint:  rgba(236, 227, 210, 0.42);
+
+  /* Type */
+  --font-serif: "Cormorant Garamond", "EB Garamond", "Libre Baskerville",
+                Garamond, "Times New Roman", serif;
+  --font-sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Helvetica, Arial, sans-serif;
+
+  /* Layout */
+  --measure: 46rem;
+  --gutter:  clamp(1.5rem, 6vw, 3.5rem);
+
+  /* Motion */
+  --bg-fade:  2600ms;
+  --reveal:   1600ms;
+  --ease:     cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+
+/* ---------------------------------------------------------
+   2. RESET
+   --------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  background-color: var(--ink-black);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--ink-black);
+  color: var(--ivory);
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 100%;
+  line-height: 1.9;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg { display: block; max-width: 100%; }
+
+::selection {
+  background: rgba(176, 141, 87, 0.28);
+  color: var(--ivory-warm);
+}
+
+:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 5px;
+}
+
+
+/* ---------------------------------------------------------
+   3. BACKGROUND — rotating pages of the same notebook
+   --------------------------------------------------------- */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+
+  /* Fallback atmosphere if no image has loaded yet */
+  background-color: var(--ink-black);
+  background-image: linear-gradient(
+    155deg,
+    #16110d 0%,
+    #0b0908 42%,
+    #191310 78%,
+    #0a0807 100%
+  );
+}
+
+.background__layer {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  opacity: 0;
+  transform: translateZ(0);
+  transition: opacity var(--bg-fade) ease-in-out;
+  will-change: opacity;
+}
+
+.background__layer.is-active { opacity: 1; }
+
+/* Consistency layer — keeps the text readable over every image */
+.background__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 6, 5, 0.90) 0%,
+      rgba(7, 6, 5, 0.72) 26%,
+      rgba(7, 6, 5, 0.66) 54%,
+      rgba(7, 6, 5, 0.86) 80%,
+      rgba(7, 6, 5, 0.96) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(7, 6, 5, 0.72) 0%,
+      rgba(7, 6, 5, 0.26) 36%,
+      rgba(7, 6, 5, 0.26) 64%,
+      rgba(7, 6, 5, 0.72) 100%
+    );
+}
+
+.background__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 88% 78% at 50% 44%,
+    rgba(0, 0, 0, 0) 28%,
+    rgba(0, 0, 0, 0.40) 76%,
+    rgba(0, 0, 0, 0.70) 100%
+  );
+}
+
+/* Aged paper grain — barely perceptible, never distracting */
+.background__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+
+/* ---------------------------------------------------------
+   4. PAGE SHELL
+   --------------------------------------------------------- */
+.page {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+
+/* ---------------------------------------------------------
+   5. HERO
+   --------------------------------------------------------- */
+.hero {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding:
+    clamp(5rem, 17vh, 11rem)
+    var(--gutter)
+    clamp(3rem, 8vh, 6rem);
+  text-align: center;
+}
+
+/* ---- LOOK CLOSER. ---- */
+.hero__title {
+  margin: 0;
+  /* Balances the trailing letter-space so the word sits truly centred */
+  margin-right: -0.26em;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(2.3rem, 10.5vw, 6.25rem);
+  line-height: 1.06;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ivory-warm);
+  text-shadow: 0 0 70px rgba(0, 0, 0, 0.65);
+}
+
+/* ---- Thin vertical rule ---- */
+.hero__rule {
+  display: block;
+  width: 1px;
+  height: clamp(2.75rem, 7vh, 4.75rem);
+  margin: clamp(2.5rem, 7vh, 4.75rem) auto;
+  background: linear-gradient(
+    to bottom,
+    rgba(176, 141, 87, 0) 0%,
+    var(--gold-dim) 28%,
+    var(--gold-dim) 72%,
+    rgba(176, 141, 87, 0) 100%
+  );
+  opacity: 0.85;
+}
+
+/* ---- The creed ---- */
+.creed {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 2.4vw, 1.45rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 2.05;
+  letter-spacing: 0.045em;
+  color: var(--ivory);
+}
+
+.creed span { display: block; }
+
+/* ---- Body prose ---- */
+.prose {
+  margin: clamp(4rem, 12.5vh, 8.5rem) 0 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(1rem, 2.1vw, 1.28rem);
+  line-height: 2.15;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.prose .line { display: block; }
+
+.prose--closing {
+  color: var(--ivory);
+  letter-spacing: 0.035em;
+}
+
+/* ---- Four observed words ---- */
+.words {
+  margin: clamp(3.75rem, 11vh, 7.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.words li {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(1.15rem, 2.9vw, 1.7rem);
+  line-height: 2.6;
+  letter-spacing: 0.16em;
+  color: var(--parchment);
+}
+
+
+/* ---------------------------------------------------------
+   6. FOOTER — identity + contact
+   --------------------------------------------------------- */
+.footer {
+  width: 100%;
+  max-width: var(--measure);
+  margin-top: auto;
+  padding:
+    clamp(4rem, 12vh, 8rem)
+    var(--gutter)
+    clamp(3rem, 7vh, 5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.75rem, 4.5vh, 2.75rem);
+  text-align: center;
+}
+
+/* ---- Software Engineer · Systems · AI · Ideas ---- */
+.discipline {
+  margin: 0;
+  margin-right: -0.34em; /* balances uppercase letter-spacing */
+  font-family: var(--font-sans);
+  font-size: clamp(0.64rem, 1.5vw, 0.73rem);
+  font-weight: 400;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(203, 184, 148, 0.48);
+}
+
+/* ---- GitHub | Email ---- */
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.1rem, 4vw, 2rem);
+}
+
+.contact__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.62em;
+  padding: 0.55rem 0.2rem;
+  font-family: var(--font-sans);
+  font-size: clamp(0.68rem, 1.6vw, 0.77rem);
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(236, 227, 210, 0.55);
+  transition: color 700ms var(--ease);
+}
+
+.contact__link svg {
+  flex: none;
+  opacity: 0.72;
+  transition: opacity 700ms var(--ease);
+}
+
+/* Hairline underline that draws itself in */
+.contact__link::after {
+  content: "";
+  position: absolute;
+  left: 0.2rem;
+  right: 0.2rem;
+  bottom: 0.28rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 750ms var(--ease);
+}
+
+.contact__link:hover,
+.contact__link:focus-visible {
+  color: var(--ivory);
+}
+
+.contact__link:hover svg,
+.contact__link:focus-visible svg {
+  opacity: 1;
+}
+
+.contact__link:hover::after,
+.contact__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.contact__divider {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--gold-dim);
+  opacity: 0.4;
+  user-select: none;
+}
+
+
+/* ---------------------------------------------------------
+   7. REVEAL — gentle, scroll-triggered fade
+   (Only active when JavaScript is present.)
+   --------------------------------------------------------- */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--reveal) var(--ease),
+    transform var(--reveal) var(--ease);
+  transition-delay: var(--delay, 0ms);
+}
+
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+
+/* ---------------------------------------------------------
+   8. SCROLLBAR — quiet
+   --------------------------------------------------------- */
+::-webkit-scrollbar { width: 9px; }
+::-webkit-scrollbar-track { background: var(--ink-black); }
+::-webkit-scrollbar-thumb {
+  background: rgba(176, 141, 87, 0.20);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(176, 141, 87, 0.34);
+}
+
+
+/* ---------------------------------------------------------
+   9. RESPONSIVE
+   --------------------------------------------------------- */
+
+/* --- Laptop / small desktop --- */
+@media (max-width: 1024px) {
+  :root { --measure: 42rem; }
+}
+
+/* --- Tablet --- */
+@media (max-width: 820px) {
+  .hero__title {
+    letter-spacing: 0.22em;
+    margin-right: -0.22em;
+  }
+
+  .prose { line-height: 2.05; }
+  .words li { line-height: 2.45; }
+}
+
+/* --- Phone --- */
+@media (max-width: 600px) {
+  :root {
+    --measure: 100%;
+    --gutter: 1.4rem;
+  }
+
+  .hero {
+    padding-top: clamp(4.25rem, 15vh, 7rem);
+    padding-bottom: 2.5rem;
+  }
+
+  .hero__title {
+    font-size: clamp(2rem, 12vw, 3rem);
+    letter-spacing: 0.18em;
+    margin-right: -0.18em;
+    line-height: 1.15;
+  }
+
+  .hero__rule { margin: 2.25rem auto; }
+
+  .creed {
+    font-size: 1.02rem;
+    line-height: 2;
+    letter-spacing: 0.03em;
+  }
+
+  .prose {
+    margin-top: clamp(3.25rem, 10vh, 4.5rem);
+    font-size: 1rem;
+    line-height: 2;
+    letter-spacing: 0.02em;
+  }
+
+  .words {
+    margin-top: clamp(3rem, 9vh, 4.25rem);
+  }
+
+  .words li {
+    font-size: 1.15rem;
+    line-height: 2.35;
+    letter-spacing: 0.13em;
+  }
+
+  .footer {
+    padding-top: clamp(3.5rem, 10vh, 5rem);
+    padding-bottom: 2.75rem;
+  }
+
+  .discipline {
+    font-size: 0.62rem;
+    letter-spacing: 0.26em;
+    margin-right: -0.26em;
+    line-height: 1.9;
+  }
+
+  .contact { gap: 1rem; }
+
+  .contact__link {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    padding: 0.7rem 0.35rem; /* comfortable tap target */
+  }
+
+  /* Slightly lighter scrim so the notebook pages stay visible */
+  .background__scrim {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(7, 6, 5, 0.88) 0%,
+        rgba(7, 6, 5, 0.70) 30%,
+        rgba(7, 6, 5, 0.74) 60%,
+        rgba(7, 6, 5, 0.94) 100%
+      );
+  }
+
+  .background__vignette {
+    background: radial-gradient(
+      ellipse 100% 85% at 50% 42%,
+      rgba(0, 0, 0, 0) 32%,
+      rgba(0, 0, 0, 0.38) 80%,
+      rgba(0, 0, 0, 0.66) 100%
+    );
+  }
+}
+
+/* --- Very small phones --- */
+@media (max-width: 380px) {
+  .contact__divider { display: none; }
+  .contact { gap: 1.4rem; }
+}
+
+/* --- Short viewports (landscape phones) --- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero { padding-top: 3.5rem; }
+  .hero__title { font-size: clamp(1.8rem, 6vw, 2.75rem); }
+  .words li { line-height: 2; }
+}
+
+
+/* ---------------------------------------------------------
+   10. REDUCED MOTION
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .background__layer {
+    transition: opacity 1200ms linear;
+  }
+
+  .contact__link,
+  .contact__link::after,
+  .contact__link svg {
+    transition-duration: 1ms;
+  }
+}
+
+#yt-audio,
+#yt-audio iframe {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  overflow: hidden;
+  left: -9999px;
+}
+
+
+/* ---------------------------------------------------------
+   SOUND TOGGLE
+   --------------------------------------------------------- */
+.sound {
+  margin-top: clamp(1.25rem, 3vh, 2rem);
+}
+
+.sound__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65em;
+  padding: 0.55rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(176, 141, 87, 0.28);
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: clamp(0.62rem, 1.5vw, 0.7rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(236, 227, 210, 0.5);
+  cursor: pointer;
+  transition:
+    color 600ms var(--ease),
+    border-color 600ms var(--ease),
+    background-color 600ms var(--ease);
+}
+
+.sound__button:hover,
+.sound__button:focus-visible {
+  color: var(--ivory);
+  border-color: rgba(176, 141, 87, 0.6);
+  background-color: rgba(176, 141, 87, 0.06);
+}
+
+.sound__icon {
+  display: inline-flex;
+}
+
+.sound__icon--on {
+  display: none;
+}
+
+/* When unmuted, show the "on" icon and warm the accent */
+.sound__button[aria-pressed="true"] {
+  color: var(--parchment);
+  border-color: rgba(176, 141, 87, 0.5);
+}
+
+.sound__button[aria-pressed="true"] .sound__icon--off {
+  display: none;
+}
+
+.sound__button[aria-pressed="true"] .sound__icon--on {
+  display: inline-flex;
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Look Closer.</title>
+    <meta name="description"
+        content="Before building, observe. Before observing, question. Before questioning, doubt what appears obvious.">
+    <meta name="theme-color" content="#070605">
+    <meta name="color-scheme" content="dark">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Enables the fade-in choreography only when JS is available. -->
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body>
+
+    <div id="yt-audio" aria-hidden="true"></div>
+
+
+    <!-- ============================================================
+     BACKGROUND — rotating notebook pages
+     ============================================================ -->
+    <div class="background" aria-hidden="true">
+        <div class="background__layer" data-src="assets/1.jpeg"></div>
+        <div class="background__layer" data-src="assets/2.jpeg"></div>
+        <div class="background__layer" data-src="assets/3.jpeg"></div>
+        <div class="background__layer" data-src="assets/4.jpeg"></div>
+        <div class="background__layer" data-src="assets/5.jpeg"></div>
+        <div class="background__layer" data-src="assets/6.jpeg"></div>
+        <div class="background__layer" data-src="assets/7.jpeg"></div>
+        <div class="background__layer" data-src="assets/nt.jpeg"></div>
+
+
+
+        <div class="background__scrim"></div>
+        <div class="background__vignette"></div>
+        <div class="background__grain"></div>
+    </div>
+
+
+    <!-- ============================================================
+     PAGE
+     ============================================================ -->
+    <main class="page">
+
+        <section class="hero" aria-labelledby="hero-title">
+
+            <h1 class="hero__title" id="hero-title" data-reveal>Look closer.</h1>
+
+            <span class="hero__rule" data-reveal style="--delay:120ms"></span>
+
+            <p class="creed" data-reveal style="--delay:260ms">
+                <span>Before building, observe.</span>
+                <span>Before observing, question.</span>
+                <span>Before questioning, doubt what appears obvious.</span>
+            </p>
+
+            <p class="prose" data-reveal>
+                <span class="line">The world is full of things we have learned</span>
+                <span class="line">to stop noticing.</span>
+            </p>
+
+            <ul class="words" data-reveal>
+                <li>Connections.</li>
+                <li>Systems.</li>
+                <li>Imperfections.</li>
+                <li>Possibilities.</li>
+            </ul>
+
+            <p class="prose" data-reveal>
+                <span class="line">Perhaps creation begins when observation</span>
+                <span class="line">becomes impossible to ignore.</span>
+            </p>
+
+            <p class="prose prose--closing" data-reveal>
+                <span class="line">So I build&mdash;not simply to produce something,</span>
+                <span class="line">but to discover what becomes visible</span>
+                <span class="line">through the process.</span>
+            </p>
+
+        </section>
+
+
+        <!-- ==========================================================
+       FOOTER
+       ========================================================== -->
+        <footer class="footer">
+
+            <p class="discipline" data-reveal>
+                Software Engineer <span aria-hidden="true">&middot;</span>
+                Systems <span aria-hidden="true">&middot;</span>
+                AI <span aria-hidden="true">&middot;</span>
+                Ideas
+            </p>
+
+            <nav class="contact" aria-label="Contact" data-reveal>
+                <!-- Replace with your GitHub URL -->
+                <a class="contact__link" href="https://github.com/keshavroka55" target="_blank"
+                    rel="noopener noreferrer">
+                    <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"
+                        focusable="false">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </nav>
+
+            <div class="sound" data-reveal>
+                <button id="sound-toggle" class="sound__button" type="button" aria-pressed="false"
+                    aria-label="Play background music">
+
+                    <span class="sound__icon sound__icon--off" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+                            stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 5 6 9H2v6h4l5 4V5z" />
+                            <line x1="22" y1="9" x2="16" y2="15" />
+                            <line x1="16" y1="9" x2="22" y2="15" />
+                        </svg>
+                    </span>
+
+                    <span class="sound__icon sound__icon--on" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+                            stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 5 6 9H2v6h4l5 4V5z" />
+                            <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+                            <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+                        </svg>
+                    </span>
+
+                    <span class="sound__label">Sound</span>
+                </button>
+            </div>
+
+        </footer>
+
+    </main>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>
